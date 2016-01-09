@@ -3,12 +3,12 @@
 ## Table of Contents
 
 - [Overview](#overview)
-- [Gradle via Maven Central](#gradle-via-maven-central)
-- [Quick start](#quick-start-for-eddystone)
+- [Gradle via Jcenter](#gradle-via-Jcenter)
+- [Quick start](#quick-start)
 
 ## Overview
 
-### Gradle via Maven Central
+### Gradle via Jcenter
 
 BlueStone Android SDK is available on [JCenter](http://). Declare in your Gradle's `build.gradle` dependency to this library.
 
