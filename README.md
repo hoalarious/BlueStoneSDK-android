@@ -21,7 +21,7 @@ dependencies {
 
 ### Quick start
 
-Following code snippet shows you how you can start discovering nearby Estimote beacons broadcasting Eddystone packet.
+Sample code
 
 ```java
   private BluestoneManager mBluestoneManager;
