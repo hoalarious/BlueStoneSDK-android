@@ -15,7 +15,7 @@ BlueStone Android SDK is available on [JCenter](http://). Declare in your Gradle
 
 ```gradle
 dependencies {
-  compile 'com.pickme:sdk:0.0.2@aar'
+  compile 'pickme.bluestone_sdk:bluestone-sdk:0.0.2'
 }
 ```
 
@@ -26,23 +26,25 @@ Sample code
 ```java
   private BluestoneManager mBluestoneManager;
   
-  private void run()
-    {
-     long SCAN_PERIOD = 600000
-     int rssiIgnore = 55
-     int sampleSize = 25
+   @Override
+    protected void onCreate(Bundle savedInstanceState) {
+    ...
+    long SCAN_PERIOD = 600000;
+     int rssiIgnore = 55;
+     int sampleSize = 25;
      mBluestoneManager = new BluestoneManager(this, rssiIgnore, sampleSize, SCAN_PERIOD);
      mBluestoneManager.setListener(mBlueStoneListener);
-   }
+    ...
+    }
  
-     private BluestoneManager.BlueStoneListener mBlueStoneListener = new BluestoneManager.BlueStoneListener() {
-        @Override
-        public void onBlueStoneCallBack(String mac, boolean inRange, byte[] scanRecord, int rssi) {
-            if (inRange) {
-            //Do something when beacon is in range.
+ private BluestoneManager.BlueStoneListener mBlueStoneListener = new BluestoneManager.BlueStoneListener() {
+    @Override
+    public void onBlueStoneCallBack(String mac, boolean inRange, byte[] scanRecord, int rssi) {
+        if (inRange) {
+        //Do something when beacon is in range.
 
-            } else {
-            //Otherwise do this if beacon is outside of range.
-            }
+        } else {
+        //Otherwise do this if beacon is outside of range.
         }
+    }
 ```
