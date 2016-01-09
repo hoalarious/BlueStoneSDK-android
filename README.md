@@ -25,15 +25,14 @@ Following code snippet shows you how you can start discovering nearby Estimote b
 ```java
   private BluestoneManager mBluestoneManager;
   
-  ...
   private void run()
-  {
- long SCAN_PERIOD = Long.parseLong(mSharedPreferences.getString("scan_timeout", "600000"));
- int rssiIgnore = Integer.parseInt(mSharedPreferences.getString("rssi_filter", "55"));
- int sampleSize = Integer.parseInt(mSharedPreferences.getString("sample_size", "25"));
- mBluestoneManager = new BluestoneManager(this, rssiIgnore, sampleSize, SCAN_PERIOD);
- mBluestoneManager.setListener(mBlueStoneListener);
- }
+    {
+     long SCAN_PERIOD = 600000
+     int rssiIgnore = 55
+     int sampleSize = 25
+     mBluestoneManager = new BluestoneManager(this, rssiIgnore, sampleSize, SCAN_PERIOD);
+     mBluestoneManager.setListener(mBlueStoneListener);
+   }
  
      private BluestoneManager.BlueStoneListener mBlueStoneListener = new BluestoneManager.BlueStoneListener() {
         @Override
