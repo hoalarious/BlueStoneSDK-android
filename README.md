@@ -11,7 +11,7 @@ Hello!
 
 ### Gradle via Jcenter
 
-BlueStone Android SDK is available on [JCenter](http://). Declare in your Gradle's `build.gradle` dependency to this library.
+BlueStone Android SDK is available on [JCenter](http://jcenter.bintray.com/pickme/bluestone_sdk/bluestone-sdk/). Declare in your Gradle's `build.gradle` dependency to this library.
 
 ```gradle
 dependencies {
