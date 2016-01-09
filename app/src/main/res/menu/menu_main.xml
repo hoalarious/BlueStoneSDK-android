@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    <item android:id="@+id/menu_scan"
+        android:title="@string/menu_scan"
+        app:showAsAction="always"
+        android:orderInCategory="100" />
+    <item android:id="@+id/menu_stop"
+        android:title="@string/menu_stop"
+        app:showAsAction="always"
+        android:orderInCategory="101" />
+    <item android:id="@+id/menu_bindings"
+        android:title="@string/menu_bindings"
+        android:orderInCategory="102"/>
+    <item android:id="@+id/menu_settings"
+        android:title="@string/menu_settings"
+        app:showAsAction="always"
+        android:orderInCategory="103"/>
+    <item android:id="@+id/menu_admin"
+        android:title="@string/menu_admin"
+        app:showAsAction="always"
+        android:orderInCategory="104"/>
+    <item android:id="@+id/menu_clear"
+        android:title="@string/menu_clear"
+        android:orderInCategory="105"/>
+</menu>
