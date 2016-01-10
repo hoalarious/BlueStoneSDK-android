@@ -29,7 +29,7 @@ Sample code
    @Override
     protected void onCreate(Bundle savedInstanceState) {
     ...
-    long SCAN_PERIOD = 600000; //Scanning duration.
+    long SCAN_PERIOD = 600000; //Scanning duration. Accepts values betwen 10000-6000000. Units in milliseconds. Defaults to 600000.
      int rssiIgnore = 55; //inRange filter. Between 10-110. Will default to 55 otherwise.
      int precision = 5; //precision. Enter values between 1-10. Will default to 5 otherwise.
      mBluestoneManager = new BluestoneManager(this, rssiIgnore, precision, SCAN_PERIOD);
