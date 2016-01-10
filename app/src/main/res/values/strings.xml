@@ -25,12 +25,12 @@
 
     <string name="pref_title_ble_scan_time_out">BLE scan time out</string>
     <string name="pref_title_ble_rssi_ignore">RSSI Ignore</string>
-    <string name="pref_title_ble_sample_size">Precision</string>
+    <string name="pref_title_ble_precision">Precision</string>
     <string name="pref_title_enable_shake_to_pickup">Enable shake to pick up</string>
     <string name="pref_title_enable_beep">Enable beep</string>
 
     <string name="pref_summary_rssi_ignore">The pick up range can be adjusted here. </string>
-    <string name="pref_summary_sample_size">Increasing the precision of the pick up decreases the responsiveness.</string>
+    <string name="pref_summary_precision">Increasing the precision of the pick up decreases the responsiveness.</string>
 
     <string-array name="pref_rssi_ignore_titles">
         <item>-45dBm</item>
@@ -55,7 +55,7 @@
         <item>65</item>
     </string-array>
 
-    <string-array name="pref_sample_size_titles">
+    <string-array name="pref_precision_titles">
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -67,17 +67,17 @@
         <item>9</item>
         <item>10</item>
     </string-array>
-    <string-array name="pref_sample_size_values">
+    <string-array name="pref_precision_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
         <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
         <item>10</item>
-        <item>15</item>
-        <item>20</item>
-        <item>25</item>
-        <item>30</item>
-        <item>35</item>
-        <item>40</item>
-        <item>45</item>
-        <item>50</item>
     </string-array>
 
     <string-array name="pref_example_list_titles">

@@ -14,6 +14,4 @@ public class Product implements Serializable {
     public String colours;
     public String sizes;
     public String comments;
-    public byte counter;
-    public byte ingoreCounter;
 }

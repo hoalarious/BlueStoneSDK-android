@@ -110,8 +110,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         long SCAN_PERIOD = Long.parseLong(mSharedPreferences.getString("scan_timeout", "600000"));
         int rssiIgnore = Integer.parseInt(mSharedPreferences.getString("rssi_filter", "55"));
-        int sampleSize = Integer.parseInt(mSharedPreferences.getString("sample_size", "25"));
-        mBluestoneManager = new BluestoneManager(this, rssiIgnore, sampleSize, SCAN_PERIOD);
+        int precision = Integer.parseInt(mSharedPreferences.getString("precision", "25"));
+        mBluestoneManager = new BluestoneManager(this, rssiIgnore, precision, SCAN_PERIOD);
         mBluestoneManager.setListener(mBlueStoneListener);
     }
 
@@ -281,8 +281,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             else if (key.equals("rssi_filter")){
                 mBluestoneManager.updateRssiIgnore(Integer.parseInt(sharedPreferences.getString("rssi_filter", "55")));
             }
-            else if (key.equals("sample_size")){
-                mBluestoneManager.updateSampleSize(Integer.parseInt(sharedPreferences.getString("sample_size","25")));
+            else if (key.equals("precision")){
+                mBluestoneManager.updatePrecision(Integer.parseInt(sharedPreferences.getString("precision","25")));
             }
             else if (key.equals("enable_shake_to_pickup")) {
                 shakeEnabled = mSharedPreferences.getBoolean("enable_shake_to_pickup", false);

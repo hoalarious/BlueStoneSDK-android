@@ -43,12 +43,12 @@
         android:entryValues="@array/pref_rssi_ignore_values"/>
 
     <ListPreference
-        android:key="sample_size"
-        android:title="@string/pref_title_ble_sample_size"
+        android:key="precision"
+        android:title="@string/pref_title_ble_precision"
         android:defaultValue="25"
-        android:summary="@string/pref_summary_sample_size"
-        android:entries="@array/pref_sample_size_titles"
-        android:entryValues="@array/pref_sample_size_values"/>
+        android:summary="@string/pref_summary_precision"
+        android:entries="@array/pref_precision_titles"
+        android:entryValues="@array/pref_precision_values"/>
 
     <SwitchPreference
         android:key="enable_shake_to_pickup"

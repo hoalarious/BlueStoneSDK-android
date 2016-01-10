@@ -31,6 +31,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
-    compile project(':bluestone-sdk')
+    compile 'pickme.bluestone_sdk:bluestone-sdk:0.0.4'
+    //compile project(':bluestone-sdk')
 
 }
