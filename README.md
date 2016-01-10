@@ -29,10 +29,10 @@ Sample code
    @Override
     protected void onCreate(Bundle savedInstanceState) {
     ...
-    long SCAN_PERIOD = 600000;
-     int rssiIgnore = 55;
-     int sampleSize = 25;
-     mBluestoneManager = new BluestoneManager(this, rssiIgnore, sampleSize, SCAN_PERIOD);
+    long SCAN_PERIOD = 600000; //Scanning duration
+     int rssiIgnore = 55; //inRange filter. Between 10-110. Will default to 55 otherwise.
+     int precision = 5; //
+     mBluestoneManager = new BluestoneManager(this, rssiIgnore, precision, SCAN_PERIOD);
      mBluestoneManager.setListener(mBlueStoneListener);
     ...
     }
