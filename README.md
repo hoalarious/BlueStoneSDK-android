@@ -15,7 +15,7 @@ BlueStone Android SDK is available on [JCenter](http://jcenter.bintray.com/pickm
 
 ```gradle
 dependencies {
-  compile 'pickme.bluestone_sdk:bluestone-sdk:0.0.2'
+  compile 'pickme.bluestone_sdk:bluestone-sdk:0.0.4'
 }
 ```
 
