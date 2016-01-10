@@ -29,9 +29,9 @@ Sample code
    @Override
     protected void onCreate(Bundle savedInstanceState) {
     ...
-    long SCAN_PERIOD = 600000; //Scanning duration
+    long SCAN_PERIOD = 600000; //Scanning duration.
      int rssiIgnore = 55; //inRange filter. Between 10-110. Will default to 55 otherwise.
-     int precision = 5; //
+     int precision = 5; //precision. Enter values between 1-10. Will default to 5 otherwise.
      mBluestoneManager = new BluestoneManager(this, rssiIgnore, precision, SCAN_PERIOD);
      mBluestoneManager.setListener(mBlueStoneListener);
     ...
@@ -41,7 +41,7 @@ Sample code
     @Override
     public void onBlueStoneCallBack(String mac, boolean inRange, byte[] scanRecord, int rssi) {
         if (inRange) {
-        //Do something when beacon is in range.
+        //Do something when beacon is in range. Use the mac string to identify the beacon.
 
         } else {
         //Otherwise do this if beacon is outside of range.
