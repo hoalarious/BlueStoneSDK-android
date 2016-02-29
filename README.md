@@ -5,6 +5,7 @@
 - [Overview](#overview)
 - [Gradle via Jcenter](#gradle-via-jcenter)
 - [Quick start](#quick-start)
+- [Commands](#commands)
 
 ## Overview
 Hello!
@@ -15,7 +16,7 @@ BlueStone Android SDK is available on [JCenter](http://jcenter.bintray.com/pickm
 
 ```gradle
 dependencies {
-  compile 'pickme.bluestone_sdk:bluestone-sdk:0.0.4'
+  compile 'pickme.bluestone_sdk:bluestone-sdk:0.0.5'
 }
 ```
 
@@ -38,13 +39,50 @@ Sample code
     }
  
  private BluestoneManager.BlueStoneListener mBlueStoneListener = new BluestoneManager.BlueStoneListener() {
-    @Override
-    public void onBlueStoneCallBack(String mac, boolean inRange, byte[] scanRecord, int rssi) {
-        if (inRange) {
-        //Do something when beacon is in range. Use the mac string to identify the beacon.
-
-        } else {
-        //Otherwise do this if beacon is outside of range.
+        @Override
+        public void onBlueStoneCallBack(String mac, boolean inRange, byte[] scanRecord, int rssi, String batt, String firmware, String days, String hours) {
+            if (inRange) {
+            //Do something when beacon is in range. Use the mac string to identify the beacon.
+    
+            } else {
+            //Otherwise do this if beacon is outside of range.
+            }
         }
-    }
+    
+        @Override
+        public void onScanStart() {
+            //Do something when scan starts
+        }
+
+        @Override
+        public void onScanStop() {
+            //Do something when scan stops
+        }
+    };
+```
+
+### Commands
+
+Stop scan
+
+```java
+mBluestoneManager.stopScan();
+```
+
+Start scan
+
+```java
+mBluestoneManager.startScan();
+```
+
+Update RSSI ignore
+
+```java
+mBluestoneManager.updateRssiIgnore(55); //reverse dBM. 55 for -55dBm. Increase this value if the beacon is not picked up.
+```
+
+Update Scan timeout
+
+```java
+mBluestoneManager.updateScanTimeout(60000); //Time out in milliseconds. 60000 = 60 seconds.
 ```
