@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private SharedPreferences mSharedPreferences;
     private TextView textViewUUID_RSSI, textViewUUID_ID, textViewBattery, textViewFirmware, textViewTime;
-    private TextView textViewTitle, textViewPrice;
+    private TextView textViewTitle;
     private TextView textViewVersion, textViewLabelRange;
 
     protected PowerManager.WakeLock mWakeLock;
@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         textViewFirmware = (TextView)findViewById(R.id.textViewFirmware);
         textViewTime = (TextView)findViewById(R.id.textViewTime);
         textViewTitle  = (TextView)findViewById(R.id.textViewTitle);
-        textViewPrice  = (TextView)findViewById(R.id.textViewPrice);
         textViewLabelRange = (TextView)findViewById(R.id.textViewLabelRange);
 
         textViewVersion  = (TextView)findViewById(R.id.textViewVersion);
@@ -106,9 +105,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         long SCAN_PERIOD = Long.parseLong(mSharedPreferences.getString("scan_timeout", "600000"));
         int rssiIgnore = Integer.parseInt(mSharedPreferences.getString("rssi_filter", "55"));
-        int precision = Integer.parseInt(mSharedPreferences.getString("precision", "25"));
-        mBluestoneManager = new BluestoneManager(this, rssiIgnore, SCAN_PERIOD);
+        mBluestoneManager = new BluestoneManager(this);
         mBluestoneManager.setListener(mBlueStoneListener);
+        mBluestoneManager.updateRange(-rssiIgnore);
+        mBluestoneManager.updateScanTimeout(SCAN_PERIOD);
 
         getBlueStones();
     }
@@ -213,7 +213,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if (current != null) textViewTitle.setText(current.name);
 
                 if (textViewUUID_ID.getVisibility() == View.VISIBLE) {
-                    String data = ByteArrayToString(scanRecord);
                     textViewUUID_RSSI.setText("RSSI: " + rssi + "dBm");
                     textViewUUID_ID.setText("ID: " + mac);
                     textViewBattery.setText("Battery: " + batt);
@@ -388,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 mBluestoneManager.updateScanTimeout(Long.parseLong(sharedPreferences.getString("scan_timeout", "600000")));
             }
             else if (key.equals("rssi_filter")){
-                mBluestoneManager.updateRssiIgnore(Integer.parseInt(sharedPreferences.getString("rssi_filter", "55")));
+                mBluestoneManager.updateRange(-Integer.parseInt(sharedPreferences.getString("rssi_filter", "55")));
             }
             else if (key.equals("precision")){
             }
@@ -438,21 +437,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         beaconExpiry.removeCallbacksAndMessages(null);
 
         super.onDestroy();
-    }
-
-    public String ByteArrayToString(byte[] ba)
-    {
-        StringBuilder hex = new StringBuilder(ba.length * 2);
-        for (byte b : ba)
-            hex.append(b + " ");
-        return hex.toString();
-    }
-
-    public String getMajorMinors(byte[] ba)
-    {
-        if (ba.length < 2) return "Invalid byte length";
-        int val = ((ba[0] & 0xff) << 8) | (ba[1] & 0xff);
-        return Integer.toString(val);
     }
 
 }
