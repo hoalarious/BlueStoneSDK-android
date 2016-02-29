@@ -16,7 +16,7 @@ BlueStone Android SDK is available on [JCenter](http://jcenter.bintray.com/pickm
 
 ```gradle
 dependencies {
-  compile 'pickme.bluestone_sdk:bluestone-sdk:0.0.5'
+  compile 'pickme.bluestone_sdk:bluestone-sdk:0.0.6'
 }
 ```
 
@@ -30,33 +30,33 @@ Sample code
    @Override
     protected void onCreate(Bundle savedInstanceState) {
     ...
-    long SCAN_PERIOD = 600000; //Scanning duration. Accepts values betwen 10000-6000000. Units in milliseconds. Defaults to 600000.
-     int rssiIgnore = 55; //inRange filter. Between 10-110. Will default to 55 otherwise.
-     int precision = 5; //precision. Enter values between 1-10. Will default to 5 otherwise.
-     mBluestoneManager = new BluestoneManager(this, rssiIgnore, precision, SCAN_PERIOD);
+     mBluestoneManager = new BluestoneManager(this);
      mBluestoneManager.setListener(mBlueStoneListener);
     ...
     }
  
  private BluestoneManager.BlueStoneListener mBlueStoneListener = new BluestoneManager.BlueStoneListener() {
         @Override
-        public void onBlueStoneCallBack(String mac, boolean inRange, byte[] scanRecord, int rssi, String batt, String firmware, String days, String hours) {
+        public void onBlueStoneCallBack(String mac, boolean inRange, byte[] scanRecord, int rssi, String battery, String firmware, String days, String hours) {
             if (inRange) {
-            //Do something when beacon is in range. Use the mac string to identify the beacon.
-    
+              //Do something when beacon is in range. Use the mac string to identify the beacon.
+              Log.i("BlueStone","Detected a BlueStone in range with ID: " + mac);
             } else {
-            //Otherwise do this if beacon is outside of range.
+              //Otherwise do this if beacon is outside of range.
+              Log.i("BlueStone","Detected a BlueStone out of range with ID: " + mac);
             }
         }
     
         @Override
         public void onScanStart() {
             //Do something when scan starts
+            Log.i("BlueStone","Scanning has started");
         }
 
         @Override
         public void onScanStop() {
             //Do something when scan stops
+            Log.i("BlueStone","Scanning has stopped");
         }
     };
 ```
@@ -78,11 +78,11 @@ mBluestoneManager.startScan();
 Update RSSI ignore
 
 ```java
-mBluestoneManager.updateRssiIgnore(55); //reverse dBM. 55 for -55dBm. Increase this value if the beacon is not picked up.
+mBluestoneManager.updateRange(-55); //Default: -55dBm. Range: -10 to -110 Increase this value if the beacon is not detected in range.
 ```
 
 Update Scan timeout
 
 ```java
-mBluestoneManager.updateScanTimeout(60000); //Time out in milliseconds. 60000 = 60 seconds.
+mBluestoneManager.updateScanTimeout(60000); //Default: 600000. Range: 10000 to 6000000. Time out in milliseconds.
 ```
