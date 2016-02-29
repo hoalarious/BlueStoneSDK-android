@@ -42,14 +42,6 @@
         android:entries="@array/pref_rssi_ignore_titles"
         android:entryValues="@array/pref_rssi_ignore_values"/>
 
-    <ListPreference
-        android:key="precision"
-        android:title="@string/pref_title_ble_precision"
-        android:defaultValue="25"
-        android:summary="@string/pref_summary_precision"
-        android:entries="@array/pref_precision_titles"
-        android:entryValues="@array/pref_precision_values"/>
-
     <SwitchPreference
         android:key="enable_shake_to_pickup"
         android:title="@string/pref_title_enable_shake_to_pickup"

@@ -9,11 +9,19 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="XX"
+        android:id="@+id/textViewTitle"
+        android:layout_below="@+id/textViewTime"
+        android:layout_alignParentStart="true"
+        android:textSize="30dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="ID: "
         android:id="@+id/textViewUUID_ID"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,18 +33,37 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mega shoes 4"
-        android:id="@+id/textViewTitle"
-        android:textSize="20dp"
+        android:text="Battery: "
+        android:id="@+id/textViewBattery"
         android:layout_below="@+id/textViewUUID_RSSI"
         android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Firmware version: "
+        android:id="@+id/textViewFirmware"
+        android:layout_below="@+id/textViewBattery"
+        android:layout_alignParentStart="true"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time Alive: "
+        android:id="@+id/textViewTime"
+        android:layout_below="@+id/textViewFirmware"
+        android:layout_alignParentStart="true"/>
+
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageViewBoundImage"
-        android:layout_below="@+id/textViewTitle"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/textViewTime"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -46,7 +73,8 @@
         android:textColor="#f29034"
         android:id="@+id/textViewPrice"
         android:layout_below="@+id/imageViewBoundImage"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -54,7 +82,8 @@
         android:text="Colours"
         android:id="@+id/textViewLabelColor"
         android:layout_below="@+id/textViewPrice"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -62,7 +91,8 @@
         android:orientation="horizontal"
         android:id="@+id/layoutColors"
         android:layout_below="@+id/textViewLabelColor"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -70,7 +100,8 @@
         android:text="Sizes"
         android:id="@+id/textViewLabelSizes"
         android:layout_below="@+id/layoutColors"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -78,7 +109,8 @@
         android:orientation="horizontal"
         android:id="@+id/layoutSizes"
         android:layout_below="@+id/textViewLabelSizes"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -94,7 +126,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageViewBoundImageRejected"
         android:layout_below="@+id/textViewLabelRange"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="wrap_content"
