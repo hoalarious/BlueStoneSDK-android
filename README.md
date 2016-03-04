@@ -84,5 +84,5 @@ mBluestoneManager.updateRange(-55); //Default: -55dBm. Range: -10 to -110 Increa
 Update Scan timeout
 
 ```java
-mBluestoneManager.updateScanTimeout(60000); //Default: 600000. Range: 10000 to 6000000. Time out in milliseconds.
+mBluestoneManager.updateScanTimeout(60000); //Default: 60000000. Range: 10000 to 600000000. Time out in milliseconds.
 ```
