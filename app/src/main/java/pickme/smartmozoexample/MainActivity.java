@@ -402,7 +402,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 textViewUUID_ID.setText("ID: " + blueStone.id);
                 textViewBattery.setText("Battery: " + blueStone.batt_cur);
                 textViewFirmware.setText("Firmware version: " + blueStone.firmware);
-                textViewTime.setText("Time alive: " + blueStone.rtc2.trim() + "d " + blueStone.rtc1.trim() + "h");
+                textViewTime.setText("Time alive: " + blueStone.rtc2 + "d " + blueStone.rtc1 + "h");
                 textViewUUID.setText("Config: " + blueStone.config);
                 textViewMajor.setText("Motion: " + blueStone.motion);
                 textViewMinor.setText("Configurable: " + blueStone.configurable);
