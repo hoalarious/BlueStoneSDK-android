@@ -18,16 +18,74 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Range"
+        android:id="@+id/textViewSeekBarTitle"
+        android:layout_below="@+id/textViewUUID_RSSI"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="50"
+        android:id="@+id/textViewSeekBarValue"
+        android:layout_below="@+id/textViewUUID_RSSI"
+        android:layout_alignParentEnd="true"/>
+
+    <SeekBar
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekbarRSSI"
+        android:layout_below="@+id/textViewSeekBarValue"
+        android:layout_alignParentStart="true"
+        android:max="100"
+        android:progress="50" />
+
+    <Switch
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Enable sound"
+        android:id="@+id/switchSound"
+        android:layout_below="@+id/seekbarRSSI"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="ID: "
         android:id="@+id/textViewUUID_ID"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="UUID: "
+        android:id="@+id/textViewUUID"
+        android:layout_below="@+id/textViewUUID_ID"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Major: "
+        android:id="@+id/textViewMajor"
+        android:layout_below="@+id/textViewUUID"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Minor: "
+        android:id="@+id/textViewMinor"
+        android:layout_below="@+id/textViewMajor"
+        android:layout_alignParentStart="true"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="RSSI: "
         android:id="@+id/textViewUUID_RSSI"
-        android:layout_below="@+id/textViewUUID_ID"
+        android:layout_below="@+id/textViewTitle"
         android:layout_alignParentStart="true"/>
 
     <TextView
@@ -35,7 +93,7 @@
         android:layout_height="wrap_content"
         android:text="Battery: "
         android:id="@+id/textViewBattery"
-        android:layout_below="@+id/textViewUUID_RSSI"
+        android:layout_below="@+id/textViewMinor"
         android:layout_alignParentStart="true"/>
 
     <TextView
@@ -121,6 +179,117 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/textViewLabelSizes" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Global BlueStone Configs:"
+        android:id="@+id/textViewLabelConfigs"
+        android:layout_marginTop="150dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textViewLabelSizes" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enable LED"
+        android:id="@+id/switchBS_led"
+        android:checked="false"
+        android:layout_below="@+id/textViewLabelConfigs"
+        android:layout_alignParentStart="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enable motion"
+        android:id="@+id/switchBS_motion"
+        android:checked="true"
+        android:layout_below="@+id/switchBS_led"
+        android:layout_alignParentStart="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enable motion LED"
+        android:id="@+id/switchBS_motion_led"
+        android:checked="true"
+        android:layout_below="@+id/switchBS_motion"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Broadcast Interval"
+        android:id="@+id/textViewSeekBarIntervalTitle"
+        android:layout_below="@+id/switchBS_motion_led"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="500ms"
+        android:id="@+id/textViewSeekBarIntervalValue"
+        android:layout_below="@+id/switchBS_motion_led"
+        android:layout_alignParentEnd="true"/>
+
+    <SeekBar
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekbarInterval"
+        android:layout_below="@+id/textViewSeekBarIntervalValue"
+        android:layout_alignParentStart="true"
+        android:max="3"
+        android:progress="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Broadcast Power"
+        android:id="@+id/textViewSeekBarIntervalPowerTitle"
+        android:layout_below="@+id/seekbarInterval"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-40dBm"
+        android:id="@+id/textViewSeekBarIntervalPowerValue"
+        android:layout_below="@+id/seekbarInterval"
+        android:layout_alignParentEnd="true"/>
+
+    <SeekBar
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekbarIntervalPower"
+        android:layout_below="@+id/textViewSeekBarIntervalPowerValue"
+        android:layout_alignParentStart="true"
+        android:max="3"
+        android:progress="0" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Broadcast Motion Power"
+        android:id="@+id/textViewSeekBarMotionPowerTitle"
+        android:layout_below="@+id/seekbarIntervalPower"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="4dBm"
+        android:id="@+id/textViewSeekBarMotionPowerValue"
+        android:layout_below="@+id/seekbarIntervalPower"
+        android:layout_alignParentEnd="true"/>
+
+    <SeekBar
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekbarMotionPower"
+        android:layout_below="@+id/textViewSeekBarMotionPowerValue"
+        android:layout_alignParentStart="true"
+        android:max="3"
+        android:progress="0" />
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -136,5 +305,6 @@
         android:id="@+id/textViewVersion"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />
+
 
 </RelativeLayout>

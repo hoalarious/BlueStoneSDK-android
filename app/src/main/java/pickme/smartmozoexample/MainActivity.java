@@ -1,6 +1,7 @@
 package pickme.smartmozoexample;
 
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +24,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.widget.CompoundButton;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +40,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import pickme.bluestone_sdk.BlueStone;
 import pickme.bluestone_sdk.BluestoneManager;
+import pickme.bluestone_sdk.ConfigBS;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -47,8 +53,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private SharedPreferences mSharedPreferences;
     private TextView textViewUUID_RSSI, textViewUUID_ID, textViewBattery, textViewFirmware, textViewTime;
-    private TextView textViewTitle;
+    private TextView textViewTitle, textViewSeekBarValue, textViewUUID, textViewMajor, textViewMinor;
     private TextView textViewVersion, textViewLabelRange;
+    private TextView textViewSeekBarIntervalValue, textViewSeekBarIntervalPowerValue, textViewSeekBarMotionPowerValue;
+    private SeekBar seekbarRSSI, seekbarInterval, seekbarIntervalPower, seekbarMotionPower;
+    private Switch switchSound, switchBS_led, switchBS_motion, switchBS_motion_led;
 
     protected PowerManager.WakeLock mWakeLock;
 
@@ -66,6 +75,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private BluestoneManager mBluestoneManager;
 
+    private BluetoothDevice lastSeenDevice;
+
+    // TODO: 22/03/2016
+    // AUTO DFU
+    // Demo application
+    // Binding
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,18 +89,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         beaconExpiry = new Handler();
         rejectedBeaconExpiry = new Handler();
         shakeExpiry = new Handler();
-
-        textViewUUID_RSSI = (TextView)findViewById(R.id.textViewUUID_RSSI);
-        textViewUUID_ID  = (TextView)findViewById(R.id.textViewUUID_ID);
-        textViewBattery = (TextView)findViewById(R.id.textViewBattery);
-        textViewFirmware = (TextView)findViewById(R.id.textViewFirmware);
-        textViewTime = (TextView)findViewById(R.id.textViewTime);
-        textViewTitle  = (TextView)findViewById(R.id.textViewTitle);
-        textViewLabelRange = (TextView)findViewById(R.id.textViewLabelRange);
-
-        textViewVersion  = (TextView)findViewById(R.id.textViewVersion);
-        Date buildDate = new Date(BuildConfig.TIMESTAMP);
-        textViewVersion.setText("Build date: " + buildDate.toString());
 
         PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock((PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP), TAG);
@@ -103,14 +106,194 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
 
-        long SCAN_PERIOD = Long.parseLong(mSharedPreferences.getString("scan_timeout", "600000"));
         int rssiIgnore = Integer.parseInt(mSharedPreferences.getString("rssi_filter", "55"));
         mBluestoneManager = new BluestoneManager(this);
         mBluestoneManager.setListener(mBlueStoneListener);
         mBluestoneManager.updateRange(-rssiIgnore);
-        mBluestoneManager.updateScanTimeout(SCAN_PERIOD);
-
+        setGUI();
         getBlueStones();
+
+    }
+
+    private void setGUI(){
+        textViewUUID_RSSI = (TextView)findViewById(R.id.textViewUUID_RSSI);
+        textViewUUID_ID  = (TextView)findViewById(R.id.textViewUUID_ID);
+        textViewBattery = (TextView)findViewById(R.id.textViewBattery);
+        textViewFirmware = (TextView)findViewById(R.id.textViewFirmware);
+        textViewTime = (TextView)findViewById(R.id.textViewTime);
+        textViewTitle  = (TextView)findViewById(R.id.textViewTitle);
+        textViewLabelRange = (TextView)findViewById(R.id.textViewLabelRange);
+        textViewSeekBarValue = (TextView)findViewById(R.id.textViewSeekBarValue);
+        textViewSeekBarIntervalValue = (TextView)findViewById(R.id.textViewSeekBarIntervalValue);
+        textViewSeekBarIntervalPowerValue = (TextView)findViewById(R.id.textViewSeekBarIntervalPowerValue);
+        textViewSeekBarMotionPowerValue = (TextView)findViewById(R.id.textViewSeekBarMotionPowerValue);
+
+        seekbarRSSI = (SeekBar)findViewById(R.id.seekbarRSSI);
+        seekbarInterval = (SeekBar)findViewById(R.id.seekbarInterval);
+        seekbarIntervalPower = (SeekBar)findViewById(R.id.seekbarIntervalPower);
+        seekbarMotionPower = (SeekBar)findViewById(R.id.seekbarMotionPower);
+
+        switchSound = (Switch)findViewById(R.id.switchSound);
+        switchBS_led = (Switch)findViewById(R.id.switchBS_led);
+        switchBS_motion = (Switch)findViewById(R.id.switchBS_motion);
+        switchBS_motion_led = (Switch)findViewById(R.id.switchBS_motion_led);
+
+        textViewUUID = (TextView)findViewById(R.id.textViewUUID);
+        textViewMajor = (TextView)findViewById(R.id.textViewMajor);
+        textViewMinor = (TextView)findViewById(R.id.textViewMinor);
+
+        textViewVersion  = (TextView)findViewById(R.id.textViewVersion);
+        Date buildDate = new Date(BuildConfig.TIMESTAMP);
+        textViewVersion.setText("Build date: " + buildDate.toString());
+
+        switchSound.setChecked(beepEnabled);
+        switchSound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                beepEnabled = isChecked;
+                mSharedPreferences.edit().putBoolean("enable_beep", isChecked).apply();
+            }
+        });
+        switchBS_led.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) mBluestoneManager.configBS(ConfigBS.CMD_LED, ConfigBS.CODE_LED_ON);
+                else mBluestoneManager.configBS(ConfigBS.CMD_LED, ConfigBS.CODE_LED_OFF);
+            }
+        });
+        switchBS_motion.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    mBluestoneManager.configBS(ConfigBS.CMD_MOTION, ConfigBS.CODE_MOTION_ON);
+                else mBluestoneManager.configBS(ConfigBS.CMD_MOTION, ConfigBS.CODE_MOTION_OFF);
+            }
+        });
+        switchBS_motion_led.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) mBluestoneManager.configBS(ConfigBS.CMD_MOTION_LED,ConfigBS.CODE_MOTION_LED_ON);
+                else mBluestoneManager.configBS(ConfigBS.CMD_MOTION_LED,ConfigBS.CODE_MOTION_LED_OFF);
+            }
+        });
+
+
+        int rssiIgnore = Integer.parseInt(mSharedPreferences.getString("rssi_filter", "55"));
+
+        seekbarRSSI.setProgress(rssiIgnore);
+        textViewSeekBarValue.setText("-" + rssiIgnore + "dBm");
+        seekbarRSSI.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mBluestoneManager.updateRange(-progress);
+                textViewSeekBarValue.setText(-progress + "dBm");
+                mSharedPreferences.edit().putString("rssi_filter", "" + progress).apply();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        seekbarInterval.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                switch (progress){
+                    case 0:
+                        textViewSeekBarIntervalValue.setText("OFF");
+                        mBluestoneManager.configBS(ConfigBS.CMD_INTERVAL, ConfigBS.CODE_INTERVAL_OFF);
+                        break;
+                    case 1:
+                        textViewSeekBarIntervalValue.setText(500 + "ms");
+                        mBluestoneManager.configBS(ConfigBS.CMD_INTERVAL, ConfigBS.CODE_INTERVAL_BROADCAST_500MS);
+                        break;
+                    case 2:
+                        textViewSeekBarIntervalValue.setText(1000 + "ms");
+                        mBluestoneManager.configBS(ConfigBS.CMD_INTERVAL, ConfigBS.CODE_INTERVAL_BROADCAST_1000MS);
+                        break;
+                    case 3:
+                        textViewSeekBarIntervalValue.setText(2000 + "ms");
+                        mBluestoneManager.configBS(ConfigBS.CMD_INTERVAL, ConfigBS.CODE_INTERVAL_BROADCAST_2000MS);
+                        break;
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        seekbarIntervalPower.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                switch (progress){
+                    case 0:
+                        textViewSeekBarIntervalPowerValue.setText(-40 + "dBm");
+                        mBluestoneManager.configBS(ConfigBS.CMD_INTERVAL_PW, ConfigBS.CODE_INTERVAL_ADV_POWER_N40DBM);
+                        break;
+                    case 1:
+                        textViewSeekBarIntervalPowerValue.setText(-30 + "dBm");
+                        mBluestoneManager.configBS(ConfigBS.CMD_INTERVAL_PW, ConfigBS.CODE_INTERVAL_ADV_POWER_N30DBM);
+                        break;
+                    case 2:
+                        textViewSeekBarIntervalPowerValue.setText(-20 + "dBm");
+                        mBluestoneManager.configBS(ConfigBS.CMD_INTERVAL_PW, ConfigBS.CODE_INTERVAL_ADV_POWER_N20DBM);
+                        break;
+                    case 3:
+                        textViewSeekBarIntervalPowerValue.setText(-16 + "dBm");
+                        mBluestoneManager.configBS(ConfigBS.CMD_INTERVAL_PW, ConfigBS.CODE_INTERVAL_ADV_POWER_N16DBM);
+                        break;
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        seekbarMotionPower.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                switch (progress){
+                    case 0:
+                        textViewSeekBarMotionPowerValue.setText(4 + "dBm");
+                        mBluestoneManager.configBS(ConfigBS.CMD_MOTION_PW, ConfigBS.CODE_MOTION_ADV_POWER_P4DBM);
+                        break;
+                    case 1:
+                        textViewSeekBarMotionPowerValue.setText(0 + "dBm");
+                        mBluestoneManager.configBS(ConfigBS.CMD_MOTION_PW, ConfigBS.CODE_MOTION_ADV_POWER_0DBM);
+                        break;
+                    case 2:
+                        textViewSeekBarMotionPowerValue.setText(-4 + "dBm");
+                        mBluestoneManager.configBS(ConfigBS.CMD_MOTION_PW, ConfigBS.CODE_MOTION_ADV_POWER_N4DBM);
+                        break;
+                    case 3:
+                        textViewSeekBarMotionPowerValue.setText(-8 + "dBm");
+                        mBluestoneManager.configBS(ConfigBS.CMD_MOTION_PW, ConfigBS.CODE_MOTION_ADV_POWER_N8DBM);
+                        break;
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
     }
 
     private void getBluestoneID(final String mac){
@@ -198,30 +381,34 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private BluestoneManager.BlueStoneListener mBlueStoneListener = new BluestoneManager.BlueStoneListener() {
+
         @Override
-        public void onBlueStoneCallBack(String mac, boolean inRange, byte[] scanRecord, int rssi, String batt, String firmware, String days, String hours) {
-            Product current = products.get(mac);
+        public void onBlueStoneCallBack(BlueStone blueStone, boolean inRange, String UUID, int major, int minor) {
+            Product current = products.get(blueStone.id);
             if (current == null) {
                 Product e = new Product();
-                e.beacon = mac;
+                e.beacon = blueStone.id;
                 e.image = "item_a";
                 products.put(e.beacon, e);
-                getBluestoneID(mac);
+                getBluestoneID(blueStone.id);
+            } else if (current.name == null)
+            {
+                getBluestoneID(blueStone.id);
             }
             if (inRange) {
                 if (beepEnabled) toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP,150);
                 if (current != null) textViewTitle.setText(current.name);
-
-                if (textViewUUID_ID.getVisibility() == View.VISIBLE) {
-                    textViewUUID_RSSI.setText("RSSI: " + rssi + "dBm");
-                    textViewUUID_ID.setText("ID: " + mac);
-                    textViewBattery.setText("Battery: " + batt);
-                    textViewFirmware.setText("Firmware version: " + firmware);
-                    textViewTime.setText("Time alive: " + days.trim() + "d " + hours.trim() + "h");
-                }
+                textViewUUID_RSSI.setText("RSSI: " + blueStone.average_RSSI + "dBm");
+                textViewUUID_ID.setText("ID: " + blueStone.id);
+                textViewBattery.setText("Battery: " + blueStone.batt_cur);
+                textViewFirmware.setText("Firmware version: " + blueStone.firmware);
+                textViewTime.setText("Time alive: " + blueStone.rtc2.trim() + "d " + blueStone.rtc1.trim() + "h");
+                textViewUUID.setText("Config: " + blueStone.config);
+                textViewMajor.setText("Motion: " + blueStone.motion);
+                textViewMinor.setText("Configurable: " + blueStone.configurable);
             } else{
                 if (current != null) BluestonesOut.put(current.name, new Date());
-                else BluestonesOut.put(mac, new Date());
+                else BluestonesOut.put(blueStone.id, new Date());
                 StringBuilder outList = new StringBuilder();
                 for (String s: BluestonesOut.keySet()){
                     outList.append(s+"\n");
