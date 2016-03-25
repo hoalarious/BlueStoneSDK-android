@@ -16,7 +16,7 @@ BlueStone Android SDK is available on [JCenter](http://jcenter.bintray.com/pickm
 
 ```gradle
 dependencies {
-  compile 'pickme.bluestone_sdk:bluestone-sdk:0.0.10'
+  compile 'pickme.bluestone_sdk:bluestone-sdk:0.0.11'
 }
 ```
 
@@ -37,10 +37,11 @@ Sample code
  
  private BluestoneManager.BlueStoneListener mBlueStoneListener = new BluestoneManager.BlueStoneListener() {
         @Override
-        public void onBlueStoneCallBack(String mac, boolean inRange, String UUID, int major, int minor, byte[] scanRecord, int rssi, String batt, String firmware, String days, String hours) {
+        public void onBlueStoneCallBack(BlueStone blueStone, boolean inRange, String UUID, int major, int minor) {
             if (inRange) {
               //Do something when beacon is in range. Use the mac string to identify the beacon.
-              Log.i("BlueStone","Detected a BlueStone in range with ID: " + mac);
+              Log.i("BlueStone","Detected a BlueStone in range with ID: " + blueStone.mac);
+              String motion = blueStone.motion; //"0" if not in motion and "1" if in motion. Will convert to bool in next version.
             } else {
               //Otherwise do this if beacon is outside of range.
               Log.i("BlueStone","Detected a BlueStone out of range with ID: " + mac);
@@ -86,3 +87,4 @@ Update Scan timeout
 ```java
 mBluestoneManager.updateScanTimeout(60000); //Default: 60000000. Range: 10000 to 600000000. Time out in milliseconds.
 ```
+
